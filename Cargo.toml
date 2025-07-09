@@ -5,8 +5,9 @@ resolver = "3"
 [workspace.package]
 edition = "2024"
 version = "0.1.0"
-authors = ["TODO"]
+authors = ["FLECS-Technologies"]
 description = "A template for developing rust applications"
+license = "MIT"
 
 [workspace.dependencies]
 anyhow = "1.0"

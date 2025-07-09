@@ -14,13 +14,14 @@ This template can be used to jumpstart and unify development in rust. The follow
 1. Create a new repository by clicking on the `Use this template` button on the top right
    or [here](https://github.com/new?owner=Somic-Flecs-shared-space&template_name=development-template-rs&template_owner=Somic-Flecs-shared-space)
 2. Clone your new repository
-3. Rename the contained crates as you wish
-    1. In the root `Cargo.toml`
+3. Adjust the authors and license in the root [Cargo.toml](./Cargo.toml)
+4. Rename the contained crates as you wish
+    1. In the root [Cargo.toml](./Cargo.toml)
     2. The directory containing the crate
-    3. The `Cargo.toml` inside the crate directory
-4. Set up [Variables and secrets](#variables-and-secrets)
-5. Check if everything builds by executing ```cargo build``` in the repository directory
-6. Commit all changes (including `Cargo.lock`)
+    3. The `Cargo.toml` inside each crate directory
+5. Set up [Variables and secrets](#variables-and-secrets)
+6. Check if everything builds by executing ```cargo build``` in the repository directory
+7. Commit all changes (including `Cargo.lock`)
 
 ## Project structure
 
