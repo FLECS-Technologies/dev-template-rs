@@ -17,8 +17,9 @@ jobs:
     uses: ./.github/workflows/deploy_image.yml
     with:
       tag: ${{ github.event.release.tag_name }}
-      username: ${{ secrets.DOCKER_REGISTRY_USER }}
-      password: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
       registry: ${{ vars.DOCKER_REGISTRY }}
       app_name: ${{ vars.APP_NAME }}
       registry_namespace: ${{ vars.DOCKER_REGISTRY_NAMESPACE }}
+    secrets:
+      username: ${{ secrets.DOCKER_REGISTRY_USER }}
+      password: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}

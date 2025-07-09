@@ -30,8 +30,9 @@ jobs:
     uses: ./.github/workflows/deploy_image.yml
     with:
       tag: ${{ github.event.release.tag_name }}
-      username: ${{ github.actor }}
-      password: ${{ secrets.GITHUB_TOKEN }}
       registry: ${{ env.REGISTRY }}
       app_name: ${{ env.APP_NAME }}
       registry_namespace: ${{ env.REGISTRY_NAMESPACE }}
+    secrets:
+      username: ${{ github.actor }}
+      password: ${{ secrets.GITHUB_TOKEN }}

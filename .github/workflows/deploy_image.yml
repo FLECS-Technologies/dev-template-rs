@@ -7,14 +7,6 @@ on:
         type: string
         required: true
         description: The tag the images should be deployed as, without architecture
-      username:
-        type: string
-        required: true
-        description: The username used to authenticate with the container registry
-      password:
-        type: string
-        required: true
-        description: The password used to authenticate with the container registry
       registry:
         type: string
         required: false
@@ -29,6 +21,13 @@ on:
         required: false
         default: ""
         description: The registry namespace the image should be deployed to, leave empty if no namespace is used
+    secrets:
+      username:
+        required: true
+        description: The username used to authenticate with the container registry
+      password:
+        required: true
+        description: The password used to authenticate with the container registry
 
 jobs:
   docker:
@@ -44,8 +43,8 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ${{ inputs.registry }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          username: ${{ secrets.username }}
+          password: ${{ secrets.password }}
       - name: Load and push images
         env:
           NAMESPACE: ${{ inputs.registry_namespace }}
