@@ -1,0 +1,27 @@
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'main'
+    paths:
+      - '**/Cargo.toml'
+      - '**/Cargo.lock'
+      - '**/audit.toml'
+  pull_request:
+    branches:
+      - 'main'
+    paths:
+      - '**/Cargo.toml'
+      - '**/Cargo.lock'
+      - '**/audit.toml'
+  schedule:
+    - cron: '17 3 * * *'
+jobs:
+  security_audit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions-rust-lang/audit@579aeab71c3eeeeae955a8e3c6136bfc93915987

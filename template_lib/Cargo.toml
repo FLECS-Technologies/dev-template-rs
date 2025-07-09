@@ -1,0 +1,13 @@
+[package]
+name = "template_lib"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+description.workspace = true
+
+[dependencies]
+thiserror.workspace = true
+tracing.workspace = true
+serde_json.workspace = true
+serde = { workspace = true, features = ["derive"] }
+tracing-subscriber = { workspace = true, features = ["env-filter"] }

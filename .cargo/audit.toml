@@ -1,0 +1,3 @@
+[output]
+deny = ["unmaintained", "unsound", "yanked"]
+quiet = false
