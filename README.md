@@ -18,8 +18,9 @@ This template can be used to jumpstart and unify development in rust. The follow
     1. In the root `Cargo.toml`
     2. The directory containing the crate
     3. The `Cargo.toml` inside the crate directory
-4. Check if everything builds by executing ```cargo build``` in the repository directory
-5. Commit all changes (including `Cargo.lock`)
+4. Set up [Variables and secrets](#variables-and-secrets)
+5. Check if everything builds by executing ```cargo build``` in the repository directory
+6. Commit all changes (including `Cargo.lock`)
 
 ## Project structure
 
@@ -68,65 +69,104 @@ struct template_lib::config::Config in [template_lib/src/config/mod.rs](./templa
 
 ## CI/CD pipeline
 
-The following GitHub workflows exist in this repository.
+### Variables and secrets
 
-### Validate pull requests
+The CI/CD pipeline expects certain variables and secrets to build and deploy your application. If you only want to use
+the GitHub container registry for your container images, you do not need any secrets and just the `APP_NAME` variable,
+but need to look at [Deploy to GitHub container registry](#deploy-to-github-container-registry).
+
+#### Secrets
+
+`DOCKER_REGISTRY_USER` and `DOCKER_REGISTRY_PASSWORD` define the username and password needed to authenticate with your
+container registry.
+
+Take a look at
+the [GitHub Docs](https://docs.github.com/en/actions/how-tos/security-for-github-actions/security-guides/using-secrets-in-github-actions)
+for more information.
+
+#### Variables
+
+`DOCKER_REGISTRY` defines the container registry the images will be uploaded to.
+`DOCKER_REGISTRY_NAMESPACE` defines the namespace the images will be uploaded to, e.g. `apps`. You only have to defines
+this variable if you want to deploy to a namespace.
+`APP_NAME` defines the name of you application, it will be used for the image name.
+
+Take a look at
+the [GitHub Docs](https://docs.github.com/en/actions/how-tos/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables)
+for more information.
+
+### Deploy to GitHub container registry
+
+If you want to deploy to the GitHub container registry you have to make some adjustments:
+
+- Remove the if condition in [release_ghcr.yml](.github/workflows/release_ghcr.yml)
+- Set a correct value for environment variables `APP_NAME` and `REGISTRY_NAMESPACE`
+  in [release_ghcr.yml](.github/workflows/release_ghcr.yml)
+- Remove the if condition in the `docker_ghrc` job
+  in [pull_request_validate.yml](.github/workflows/pull_request_validate.yml)
+- Set a correct value for inputs `app_name` and `registry_namespace` in the `docker_ghrc` job
+  in [pull_request_validate.yml](.github/workflows/pull_request_validate.yml)
+- If you do not want to use another container registry delete [release.yml](.github/workflows/release_ghcr.yml) and the
+  job `docker` in [pull_request_validate.yml](.github/workflows/pull_request_validate.yml)
+
+### Workflows
+
+#### Validate pull requests
 
 The workflow defined in [pull_request_validate.yml](.github/workflows/pull_request_validate.yml) will run automatically
 on every pull request but can be manually triggered as well.
 
-#### rustfmt
+##### rustfmt
 
 The code format of the project is enforced
 using [rustfmt](https://github.com/rust-lang/rustfmt?tab=readme-ov-file#rustfmt----) without any configuration. If you
 want to customize the format look [here](https://github.com/rust-lang/rustfmt?tab=readme-ov-file#configuring-rustfmt).
 
-#### Linting
+##### Linting
 
 The code is linted using [clippy](https://github.com/rust-lang/rust-clippy?tab=readme-ov-file#clippy). Clippy is used
 with default settings but all warnings are treated as errors and will fail the check.
 
-#### Documentation
+##### Documentation
 
 The code documentation is built using [rustdoc](https://doc.rust-lang.org/rustdoc/what-is-rustdoc.html) and attached as
 an artifact.
 
-#### Testing
+##### Testing
 
 All automatic tests
 including [doc-tests](https://doc.rust-lang.org/rustdoc/write-documentation/documentation-tests.html) are executed.
 
-#### Build binaries
+##### Build binaries
 
 The project is built for the targets `x86_64-unknown-linux-gnu`, `aarch64-unknown-linux-gnu` and
 `armv7-unknown-linux-gnueabihf`. The resulting binaries are attached as artifacts.
 
-#### Determine tag
+##### Determine tag
 
 Determines the tag of the docker image that will be used from now on. If the workflow is called from a PR the tag will
 be `pr-{pr-number}` otherwise it will contain the short form commit hash and look like `commit-{commit-sha}`.
 
-#### Docker
+##### Docker
 
 Creates debug docker images. See [Build image](#build-image) for more details.
 
-#### Deploy
+#### Build image
 
-Deploys the previously built debug docker images. See [Deploy image](#deploy-image) for more details.
+The workflow defined in [build_image.yml](.github/workflows/build_image.yml) builds docker images for the three
+supported architectures and attaches them as artifacts. Look at the description of the inputs for more information.
 
-### Build image
+#### Deploy image
 
-Creates docker images for the three supported architectures and attaches them as artifacts. The build type can be
-specified via the input parameter `build_type` (`debug` or `release`). The tag for the images has to be specified via
-the input parameter `tag`.
+The workflow defined in [deploy_image.yml](.github/workflows/deploy_image.yml) deploys the previously built docker
+images to the GitHub registry. Look at the description of the inputs for more information.
 
-### Deploy image
+#### Release
 
-Deploys the previously built docker images to the GitHub registry. The tag for the resulting images and manifest has to
-be specified via the input parameter `tag`.
-
-### Release
-
-This workflow is executed on published releases. It builds release docker images and deploys them to the GitHub
-registry. The tag for the images corresponds to the git tag of the release. See [Build image](#build-image)
-and [Deploy image](#deploy-image) for more details.
+The workflow defined in [release.yml](.github/workflows/release.yml) is executed on published releases. It builds
+release docker images and deploys them to the container registry defined
+via [Variables and secrets](#variables-and-secrets). The tag for the images corresponds to the git tag of the release.
+See [Build image](#build-image) and [Deploy image](#deploy-image) for more details.
+The workflow defined in [release_ghcr.yml](.github/workflows/release_ghcr.yml) does the same but for the GitHub
+container registry. See [Deploy to GitHub container registry](#deploy-to-github-container-registry) for more
+information.

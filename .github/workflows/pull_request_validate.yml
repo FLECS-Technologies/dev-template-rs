@@ -59,7 +59,7 @@ jobs:
           args: "--locked --all-features"
       - uses: actions/upload-artifact@v4
         with:
-          name: "template-rs_${{ matrix.target }}"
+          name: "${{ vars.APP_NAME }}_${{ matrix.target }}"
           path: "target/${{ matrix.target }}/debug/template_bin"
   determine_tag:
     runs-on: ubuntu-latest
@@ -81,13 +81,19 @@ jobs:
     with:
       tag: ${{ needs.determine_tag.outputs.tag }}
       build_type: 'debug'
-  deploy:
-    needs: [ docker, determine_tag ]
-    uses: ./.github/workflows/deploy_image.yml
-    permissions:
-      contents: read
-      packages: write
-      attestations: write
-      id-token: write
+      registry: ${{ vars.DOCKER_REGISTRY }}
+      app_name: ${{ vars.APP_NAME }}
+      registry_namespace: ${{ vars.DOCKER_REGISTRY_NAMESPACE }}
+  docker_ghcr:
+    # Remove the following if statement to deploy to github container registry
+    if: false
+    needs: [ determine_tag ]
+    uses: ./.github/workflows/build_image.yml
     with:
       tag: ${{ needs.determine_tag.outputs.tag }}
+      build_type: 'debug'
+      registry: ghcr.io
+      # Replace this with the lowercase name of the repository
+      app_name: dev-template-rs
+      # Replace this with the lowercase name of your organization (or user)
+      registry_namespace: flecs-technologies

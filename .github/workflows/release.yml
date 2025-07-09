@@ -1,20 +1,24 @@
-name: release.yml
+name: Release
+run-name: Release ${{ github.event.release.tag_name }}
 on:
   release:
     types: [ published ]
 jobs:
-  build:
+  build_image:
     uses: ./.github/workflows/build_image.yml
     with:
       tag: ${{ github.event.release.tag_name }}
       build_type: 'release'
+      registry: ${{ vars.DOCKER_REGISTRY }}
+      app_name: ${{ vars.APP_NAME }}
+      registry_namespace: ${{ vars.DOCKER_REGISTRY_NAMESPACE }}
   deploy:
-    needs: [ build ]
+    needs: [ build_image ]
     uses: ./.github/workflows/deploy_image.yml
-    permissions:
-      contents: read
-      packages: write
-      attestations: write
-      id-token: write
     with:
       tag: ${{ github.event.release.tag_name }}
+      username: ${{ secrets.DOCKER_REGISTRY_USER }}
+      password: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
+      registry: ${{ vars.DOCKER_REGISTRY }}
+      app_name: ${{ vars.APP_NAME }}
+      registry_namespace: ${{ vars.DOCKER_REGISTRY_NAMESPACE }}
