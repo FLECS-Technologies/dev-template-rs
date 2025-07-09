@@ -19,9 +19,11 @@ This template can be used to jumpstart and unify development in rust. The follow
     1. In the root [Cargo.toml](./Cargo.toml)
     2. The directory containing the crate
     3. The `Cargo.toml` inside each crate directory
-5. Set up [Variables and secrets](#variables-and-secrets)
-6. Check if everything builds by executing ```cargo build``` in the repository directory
-7. Commit all changes (including `Cargo.lock`)
+5. Use the correct binary name in `build` job
+   of [pull_request_validate.yml](.github/workflows/pull_request_validate.yml)
+6. Set up [Variables and secrets](#variables-and-secrets)
+7. Check if everything builds by executing ```cargo build``` in the repository directory
+8. Commit all changes (including `Cargo.lock`)
 
 ## Project structure
 
