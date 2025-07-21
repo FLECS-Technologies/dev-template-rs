@@ -90,7 +90,7 @@ for more information.
 #### Variables
 
 `DOCKER_REGISTRY` defines the container registry the images will be uploaded to.
-`DOCKER_REGISTRY_NAMESPACE` defines the namespace the images will be uploaded to, e.g. `apps`. You only have to defines
+`DOCKER_REGISTRY_NAMESPACE` defines the namespace the images will be uploaded to, e.g. `apps`. You only have to define
 this variable if you want to deploy to a namespace.
 `APP_NAME` defines the name of you application, it will be used for the image name.
 
@@ -100,17 +100,22 @@ for more information.
 
 ### Deploy to GitHub container registry
 
-If you want to deploy to the GitHub container registry you have to make some adjustments:
+If you want to deploy to the GitHub container registry you have to make some
+adjustments:
 
 - Remove the if condition in [release_ghcr.yml](.github/workflows/release_ghcr.yml)
-- Set a correct value for environment variables `APP_NAME` and `REGISTRY_NAMESPACE`
-  in [release_ghcr.yml](.github/workflows/release_ghcr.yml)
+- Set a correct value for the inputs `app_name` and `registry_namespace`
+  in [release_ghcr.yml](.github/workflows/release_ghcr.yml) for the jobs `build_image`
+  and `deploy_ghcr`
 - Remove the if condition in the `docker_ghrc` job
   in [pull_request_validate.yml](.github/workflows/pull_request_validate.yml)
-- Set a correct value for inputs `app_name` and `registry_namespace` in the `docker_ghrc` job
+- Set a correct value for inputs `app_name` and `registry_namespace` in the
+  `docker_ghrc` job
   in [pull_request_validate.yml](.github/workflows/pull_request_validate.yml)
-- If you do not want to use another container registry delete [release.yml](.github/workflows/release_ghcr.yml) and the
-  job `docker` in [pull_request_validate.yml](.github/workflows/pull_request_validate.yml)
+- If you do not want to use another container registry
+  delete [release.yml](.github/workflows/release_ghcr.yml) and the
+  job `docker`
+  in [pull_request_validate.yml](.github/workflows/pull_request_validate.yml)
 
 ### Workflows
 
@@ -173,3 +178,8 @@ See [Build image](#build-image) and [Deploy image](#deploy-image) for more detai
 The workflow defined in [release_ghcr.yml](.github/workflows/release_ghcr.yml) does the same but for the GitHub
 container registry. See [Deploy to GitHub container registry](#deploy-to-github-container-registry) for more
 information.
+
+## Copyright
+
+- Copyright © 2025 FLECS Technologies GmbH.
+- Free software distributed under the [MIT License](./LICENSE).
