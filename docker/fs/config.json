@@ -1,0 +1,5 @@
+{
+  "trace_filter": "debug",
+  "port": 23472,
+  "default_radix": 10
+}

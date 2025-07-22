@@ -47,5 +47,6 @@ FROM debian:bookworm-slim
 ARG CARGO_HOME
 
 COPY --from=build $CARGO_HOME/bin/template_bin /
+ADD docker/fs /
 
 ENTRYPOINT [ "/template_bin" ]
