@@ -9,6 +9,9 @@ This template can be used to jumpstart and unify development in rust. The follow
 - [Configuration](#configuration)
 - [CI/CD pipeline](#cicd-pipeline)
 
+This application is also used to demonstrate how to create a FLECS app
+here: [https://github.com/FLECS-Technologies/apps-tech.flecs.template-rs](https://github.com/FLECS-Technologies/apps-tech.flecs.template-rs)
+
 ## Quickstart
 
 1. Create a new repository by clicking on the `Use this template` button on the top right
